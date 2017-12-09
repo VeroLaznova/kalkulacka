@@ -1,0 +1,30 @@
+language: python
+sudo: false
+cache: pip
+
+matrix:
+  include:
+    - os: linux
+      python: 3.6
+      language: python
+
+install:
+  - python3 -m pip install --upgrade pip
+  - python3 -m pip install pyqt5 pytest pyinstaller
+
+script:
+  - python3 -m pytest -vv test_kalkulacka/
+  - pyinstaller __main__.py -n kalkulacka-app
+      --exclude-module tkinter
+      --add-data kalkulacka:kalkulacka
+      -F -w
+
+deploy:
+    provider: releases
+    api_key:
+        secure: FsMSKf9DsS5Y2fE+vJQllMgZT8XZ7EksBff6G7c+Ih8V8L0oAPL4lhYwXRdugMIEmmx+Fi5OxePciv9qIGSZGjSlGGtcfmXzoSl7N1DZ7OHaq4KkeIRsOT09+6gy7UE2BInsF0dxfoljrLZSbWX8UKk7K2K+5lpoYIUTWX1Dspnpt4YMC9udAx0oN2oj6/dD9YikerIUt0ZMTDll4zMPS1LocJdMoTKEHrdCDTvo89GDvqRBaNrMMyt/Nfk9AAXbnOhgrqwFsVS3miFqUDyAwFPN8PjziKXAUdOae9KmDwPdSoBTNeispPj7Ckk/wJtLpfwGzThoCxXWPcw5mrClXmTat6ei2AXXXObO3/5WPT3Lq+ZzkbYkXpfxzEdiN/K2gzxQ24Z2XozwxG/syiGrDPNrjtlB+MlNntmUhOCLcEPM6BXWQuakVmSBHWCLoV6EZ+EY5oHUQf0eu6JKaPVmrYHGNx2g5Mi9ISnhDLY3+4BInpeK2cKCegkHi0LYeR7GxUyAv1fLAnCPAQ0YpH0nhMyouzb1xstd1sU3YN8rSXLW4UaORnSSFUt46HC5pWP2XjANRAje4ofxrR398IjU3GX4FBUV+fK0g+gJUaXDGA67se9ELlTvTMXOigGeIAM+OxNB2O7OL5hPt96Sl29xkmmRWaUw6CRanOOPMy3Q0E0=
+    file_glob: true
+    file: dist/*
+    skip_cleanup: true
+    on:
+        tags: true
